@@ -456,6 +456,7 @@
     border-radius: 999px;
     font-size: 11px;
     font-weight: 500;
+    white-space: nowrap;
   }
   .badge-good { background: var(--sage-100); color: var(--sage-800); }
   .badge-warn { background: var(--cream-200); color: var(--terracotta-600); }
@@ -654,7 +655,7 @@
   <header class="header">
     <div class="export-buttons">
       <button class="export-btn" onclick="exportCSV()">📥 CSV出力</button>
-      <button class="export-btn" onclick="window.print()">🖨️ 印刷</button>
+      <button class="export-btn" onclick="exportPDF()">📄 PDF出力</button>
     </div>
     <div class="header-eyebrow">— BOTANICAL JOURNAL —</div>
     <h1>キュービック錦 育成記録</h1>
@@ -663,7 +664,7 @@
       <span class="meta-chip">迎え入れ <strong>2026-05-23</strong></span>
       <span class="meta-chip">本日 <strong>2026-05-31</strong></span>
       <span class="meta-chip">育成 <strong>8日目</strong></span>
-      <span class="meta-chip">記録 <strong>34件</strong></span>
+      <span class="meta-chip">記録 <strong>35件</strong></span>
       <span class="meta-chip">フェーズ <strong>養生期 / 順応完了直後</strong></span>
     </div>
   </header>
@@ -725,8 +726,8 @@
       <div class="kpi-card weight">
         <div class="kpi-eyebrow">WEIGHT</div>
         <div class="kpi-label">⚖️ 鉢込み重量</div>
-        <div class="kpi-value">374.0<span class="unit">g</span></div>
-        <span class="kpi-status status-info">💧 給水直後</span>
+        <div class="kpi-value">341.1<span class="unit">g</span></div>
+        <span class="kpi-status status-info">💧 給水適期接近中</span>
       </div>
       <div class="kpi-card next">
         <div class="kpi-eyebrow">NEXT WATERING</div>
@@ -829,12 +830,18 @@
     <div class="section">
       <div class="section-header">
         <span class="section-eyebrow">— LOG I —</span>
-        <h2>計測ログ<span class="count">9 entries</span></h2>
+        <h2>計測ログ<span class="count">10 entries</span></h2>
       </div>
       <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table1')"></div>
       <div class="table-wrapper"><table id="table1">
         <thead><tr><th>日時</th><th class="td-num">鉢込み重量(g)</th><th class="td-num">前回比(g)</th><th>所感</th></tr></thead>
         <tbody>
+          <tr>
+  <td class="td-date">2026-05-31 21:00</td>
+  <td class="td-num">341.1</td>
+  <td class="td-num">-3.5</td>
+  <td>16:00から5時間で-3.5g（約0.7g/h）。夕方以降は蒸散ペース落ち着く。給水適期335gまで残り6.1g、6/1朝〜昼に到達見込み</td>
+</tr>
           <tr><td class="td-date">2026-05-31 16:00</td><td class="td-num">344.6</td><td class="td-num">-29.4</td><td>給水後18hで-29.4g、本格LED運用初日のためペース速め</td></tr>
           <tr><td class="td-date">2026-05-30 22:00 給水後</td><td class="td-num">374.0</td><td class="td-num">+45.4</td><td>2回目満水到達</td></tr>
           <tr><td class="td-date">2026-05-30 22:00 給水前</td><td class="td-num">328.6</td><td class="td-num">-0.1</td><td>2回目給水直前</td></tr>
@@ -897,7 +904,15 @@
       </div>
       <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table4')"></div>
       <div class="table-wrapper"><table id="table4">
-        <thead><tr><th>日時</th><th>葉状態</th><th>新葉</th><th>変色</th><th>害虫・カビ</th><th>写真</th><th class="td-long">所感</th></tr></thead>
+        <thead><tr>
+  <th style="min-width:130px;">日時</th>
+  <th style="min-width:90px;">葉状態</th>
+  <th>新葉</th>
+  <th>変色</th>
+  <th>害虫・カビ</th>
+  <th style="width:160px;">写真</th>
+  <th class="td-long">所感</th>
+</tr></thead>
         <tbody>
           <tr>
   <td class="td-date">2026-05-31 16:00</td>
@@ -967,7 +982,7 @@
 
   <!-- ===== Footer ===== -->
   <footer class="footer">
-    <div>Last updated: 2026-05-31 16:00 ｜ Total Records: 34</div>
+    <div>Last updated: 2026-05-31 21:00 ｜ Total Records: 35</div>
     <div class="footer-divider"></div>
     <div>Botanical Journal v3.0 ・ Curated by Marguerite</div>
   </footer>
@@ -1012,17 +1027,46 @@
 
   // === CSV export ===
   function exportCSV() {
-    const tab = document.querySelector('.tab-content.active');
-    const table = tab.querySelector('table');
-    if (!table) { alert('CSV出力可能なテーブルがありません'); return; }
-    const rows = [...table.querySelectorAll('tr')].map(r =>
-      [...r.querySelectorAll('th,td')].map(c => '"'+c.textContent.trim().replace(/"/g,'""')+'"').join(',')
-    ).join('\n');
-    const blob = new Blob(['\ufeff'+rows], {type:'text/csv;charset=utf-8;'});
+    const activeTab = document.querySelector('.tab-content.active');
+    let tables = activeTab.querySelectorAll('table');
+    let filename;
+    if (tables.length === 0) {
+      // ダッシュボードタブの場合は全テーブルを統合出力
+      tables = document.querySelectorAll('.tab-content table');
+      filename = 'cubic_all_' + new Date().toISOString().slice(0,10) + '.csv';
+    } else {
+      filename = 'cubic_' + new Date().toISOString().slice(0,10) + '.csv';
+    }
+    if (tables.length === 0) { alert('出力可能なテーブルがありません'); return; }
+    const sections = [...tables].map(table => {
+      const sectionTitle = table.closest('.section')?.querySelector('h2')?.textContent.trim() || '';
+      const rows = [...table.querySelectorAll('tr')].map(r =>
+        [...r.querySelectorAll('th,td')].map(c => '"'+c.textContent.trim().replace(/"/g,'""')+'"').join(',')
+      ).join('\n');
+      return '# ' + sectionTitle + '\n' + rows;
+    }).join('\n\n');
+    const blob = new Blob(['\ufeff'+sections], {type:'text/csv;charset=utf-8;'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'cubic_'+new Date().toISOString().slice(0,10)+'.csv';
+    a.download = filename;
     a.click();
+  }
+
+  function exportPDF() {
+    // 全タブを一時的に表示してから印刷ダイアログを開く（PDFとして保存を選択可能）
+    const originalStates = [];
+    document.querySelectorAll('.tab-content').forEach((c, idx) => {
+      originalStates.push(c.classList.contains('active'));
+      c.classList.add('active');
+    });
+    // 印刷ダイアログ表示（ユーザーは「PDFとして保存」を選択）
+    window.print();
+    // 印刷ダイアログを閉じた後、元の状態に戻す
+    setTimeout(() => {
+      document.querySelectorAll('.tab-content').forEach((c, idx) => {
+        if (!originalStates[idx]) c.classList.remove('active');
+      });
+    }, 100);
   }
 
   // === Weight chart ===
@@ -1136,6 +1180,7 @@
     }
   });
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>

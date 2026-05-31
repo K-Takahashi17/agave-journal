@@ -599,6 +599,52 @@
     .tab-bar, .export-buttons, .search-box { display: none !important; }
     .tab-content { display: block !important; page-break-after: always; }
   }
+
+  /* === Lightbox === */
+  .lightbox-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(20, 24, 15, 0.92);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    animation: fadeIn 0.3s ease;
+  }
+  .lightbox-overlay.active { display: flex; }
+  .lightbox-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 24px; right: 32px;
+    color: var(--cream-50);
+    font-size: 32px;
+    font-family: 'Cormorant Garamond', serif;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .lightbox-close:hover { opacity: 1; }
+  .lightbox-caption {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--cream-100);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    background: rgba(0,0,0,0.5);
+    padding: 8px 20px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
 </style>
 </head>
 <body>
@@ -752,7 +798,7 @@
         <div class="timeline-item active">
           <div class="timeline-icon">🌱</div>
           <div class="timeline-phase">養生期<span class="timeline-year">2026/05 — 2026/12</span></div>
-          <div class="timeline-detail">現在地：迎え入れから7日目。LED12h・湿度40〜60%維持・新葉展開を待機。プレステラ深型90のまま根の充実を最優先。</div>
+          <div class="timeline-detail">現在地：迎え入れから8日目。LED12h・湿度40〜60%維持・新葉展開を待機。プレステラ深型90のまま根の充実を最優先。</div>
         </div>
         <div class="timeline-item">
           <div class="timeline-icon">🪴</div>
@@ -790,14 +836,14 @@
         <thead><tr><th>日時</th><th class="td-num">鉢込み重量(g)</th><th class="td-num">前回比(g)</th><th>所感</th></tr></thead>
         <tbody>
           <tr><td class="td-date">2026-05-31 16:00</td><td class="td-num">344.6</td><td class="td-num">-29.4</td><td>給水後18hで-29.4g、本格LED運用初日のためペース速め</td></tr>
-          <tr><td class="td-date">2026-05-27 10:26</td><td class="td-num">333.7</td><td class="td-num">—</td><td>外側3枚黄変・張りなし、初回計測</td></tr>
-          <tr><td class="td-date">2026-05-27 22:00 給水前</td><td class="td-num">328.6</td><td class="td-num">-5.1</td><td>乾燥重量ベンチマーク取得</td></tr>
-          <tr><td class="td-date">2026-05-27 22:00 給水後</td><td class="td-num">375.3</td><td class="td-num">+46.7</td><td>初回満水基準確定</td></tr>
-          <tr><td class="td-date">2026-05-28 11:20</td><td class="td-num">355.4</td><td class="td-num">-19.9</td><td>14hで-19.9g、根機能良好の兆候</td></tr>
-          <tr><td class="td-date">2026-05-29 11:53</td><td class="td-num">340.7</td><td class="td-num">-14.7</td><td>24.5hで-14.7g、葉の張り改善</td></tr>
-          <tr><td class="td-date">2026-05-30 12:27</td><td class="td-num">328.7</td><td class="td-num">-12.0</td><td>給水適期に到達</td></tr>
-          <tr><td class="td-date">2026-05-30 22:00 給水前</td><td class="td-num">328.6</td><td class="td-num">-0.1</td><td>2回目給水直前</td></tr>
           <tr><td class="td-date">2026-05-30 22:00 給水後</td><td class="td-num">374.0</td><td class="td-num">+45.4</td><td>2回目満水到達</td></tr>
+          <tr><td class="td-date">2026-05-30 22:00 給水前</td><td class="td-num">328.6</td><td class="td-num">-0.1</td><td>2回目給水直前</td></tr>
+          <tr><td class="td-date">2026-05-30 12:27</td><td class="td-num">328.7</td><td class="td-num">-12.0</td><td>給水適期に到達</td></tr>
+          <tr><td class="td-date">2026-05-29 11:53</td><td class="td-num">340.7</td><td class="td-num">-14.7</td><td>24.5hで-14.7g、葉の張り改善</td></tr>
+          <tr><td class="td-date">2026-05-28 11:20</td><td class="td-num">355.4</td><td class="td-num">-19.9</td><td>14hで-19.9g、根機能良好の兆候</td></tr>
+          <tr><td class="td-date">2026-05-27 22:00 給水後</td><td class="td-num">375.3</td><td class="td-num">+46.7</td><td>初回満水基準確定</td></tr>
+          <tr><td class="td-date">2026-05-27 22:00 給水前</td><td class="td-num">328.6</td><td class="td-num">-5.1</td><td>乾燥重量ベンチマーク取得</td></tr>
+          <tr><td class="td-date">2026-05-27 10:26</td><td class="td-num">333.7</td><td class="td-num">—</td><td>外側3枚黄変・張りなし、初回計測</td></tr>
         </tbody>
       </table></div>
     </div>
@@ -815,10 +861,10 @@
         <thead><tr><th>日時</th><th class="td-num">室温(℃)</th><th class="td-num">湿度(%)</th><th class="td-num">照度(lux)</th><th class="td-num">CO₂(ppm)</th><th class="td-long">所感</th></tr></thead>
         <tbody>
           <tr><td class="td-date">2026-05-31 16:00</td><td class="td-num">27.9</td><td class="td-num">39 ⚠️</td><td class="td-num">—</td><td class="td-num">—</td><td>LED40cm接近の影響か、湿度が理想下限を下回る</td></tr>
-          <tr><td class="td-date">2026-05-27 10:26</td><td class="td-num">28.1</td><td class="td-num">44</td><td class="td-num">—</td><td class="td-num">—</td><td>初回計測時の環境</td></tr>
-          <tr><td class="td-date">2026-05-29 11:53</td><td class="td-num">26.2</td><td class="td-num">49</td><td class="td-num">—</td><td class="td-num">—</td><td>理想レンジ内、安定</td></tr>
-          <tr><td class="td-date">2026-05-30 12:27</td><td class="td-num">26.8</td><td class="td-num">24 ⚠️</td><td class="td-num">—</td><td class="td-num">—</td><td>エアコン停止＋窓開け、外気湿度低下が要因</td></tr>
           <tr><td class="td-date">2026-05-30 23:00</td><td class="td-num">25.6</td><td class="td-num">45</td><td class="td-num">—</td><td class="td-num">—</td><td>給水と夜間気温低下で湿度回復</td></tr>
+          <tr><td class="td-date">2026-05-30 12:27</td><td class="td-num">26.8</td><td class="td-num">24 ⚠️</td><td class="td-num">—</td><td class="td-num">—</td><td>エアコン停止＋窓開け、外気湿度低下が要因</td></tr>
+          <tr><td class="td-date">2026-05-29 11:53</td><td class="td-num">26.2</td><td class="td-num">49</td><td class="td-num">—</td><td class="td-num">—</td><td>理想レンジ内、安定</td></tr>
+          <tr><td class="td-date">2026-05-27 10:26</td><td class="td-num">28.1</td><td class="td-num">44</td><td class="td-num">—</td><td class="td-num">—</td><td>初回計測時の環境</td></tr>
         </tbody>
       </table></div>
     </div>
@@ -835,8 +881,8 @@
       <div class="table-wrapper"><table id="table3">
         <thead><tr><th>日時</th><th class="td-num">給水前(g)</th><th class="td-num">給水後(g)</th><th class="td-num">給水量(g)</th><th>方法</th><th class="td-long">補足</th></tr></thead>
         <tbody>
-          <tr><td class="td-date">2026-05-27 22:00</td><td class="td-num">328.6</td><td class="td-num">375.3</td><td class="td-num">約47</td><td>アイロン用先細給水カップ</td><td>初回給水、満水重量を確定</td></tr>
           <tr><td class="td-date">2026-05-30 22:00</td><td class="td-num">328.6</td><td class="td-num">374.0</td><td class="td-num">約45</td><td>アイロン用先細給水カップ</td><td>2回目給水、LED消灯後21:30〜22:00に実施</td></tr>
+          <tr><td class="td-date">2026-05-27 22:00</td><td class="td-num">328.6</td><td class="td-num">375.3</td><td class="td-num">約47</td><td>アイロン用先細給水カップ</td><td>初回給水、満水重量を確定</td></tr>
         </tbody>
       </table></div>
     </div>
@@ -860,15 +906,15 @@
   <td>外葉枯れ込み継続(自然調整)</td>
   <td><span class="badge badge-good">なし</span></td>
   <td>
-     <a href="photos/cubic_2026-05-31_1600_01_top.png" target="_blank"><img src="photos/cubic_2026-05-31_1600_01_top.png" style="width:64px;height:64px;object-fit:cover;border-radius:6px;display:inline-block;margin-right:4px;" alt="真上アングル"></a>
-     <a href="photos/cubic_2026-05-31_1600_02_side.png" target="_blank"><img src="photos/cubic_2026-05-31_1600_02_side.png" style="width:64px;height:64px;object-fit:cover;border-radius:6px;display:inline-block;" alt="横アングル"></a>
+    <img src="photos/cubic_2026-05-31_1600_01_top.png" onclick="openLightbox('photos/cubic_2026-05-31_1600_01_top.png', '2026-05-31 16:00 真上アングル')" style="width:64px;height:64px;object-fit:cover;border-radius:6px;display:inline-block;margin-right:4px;cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="真上アングル">
+    <img src="photos/cubic_2026-05-31_1600_02_side.png" onclick="openLightbox('photos/cubic_2026-05-31_1600_02_side.png', '2026-05-31 16:00 横アングル')" style="width:64px;height:64px;object-fit:cover;border-radius:6px;display:inline-block;cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="横アングル">
   </td>
   <td>中央新葉4-5枚充実、覆輪斑明瞭、葉先赤褐色発色良好。鋸歯しっかり育成。外葉枯れ込みは輸送ダメージの延長で自然な調整中</td>
 </tr>
-          <tr><td class="td-date">2026-05-28</td><td><span class="badge badge-warn">外葉黄変</span></td><td>あり</td><td>黄変あり</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>中央新葉健全、右上葉大黄変・葉先枯死。輸送ダメージ</td></tr>
-          <tr><td class="td-date">2026-05-29</td><td><span class="badge badge-good">張り改善</span></td><td>あり</td><td>薄茶斑・覆輪斑茶線</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>外側黄変停止。写真4枚撮影</td></tr>
-          <tr><td class="td-date">2026-05-29 11:53</td><td><span class="badge badge-good">張り良好</span></td><td>あり</td><td>良好</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>赤褐色発色鮮やか、優良株として再評価</td></tr>
           <tr><td class="td-date">2026-05-30 12:27</td><td><span class="badge badge-good">変化なし</span></td><td>安定</td><td>なし</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>湿度低下が懸念点だが株状態は良好</td></tr>
+          <tr><td class="td-date">2026-05-29 11:53</td><td><span class="badge badge-good">張り良好</span></td><td>あり</td><td>良好</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>赤褐色発色鮮やか、優良株として再評価</td></tr>
+          <tr><td class="td-date">2026-05-29</td><td><span class="badge badge-good">張り改善</span></td><td>あり</td><td>薄茶斑・覆輪斑茶線</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>外側黄変停止。写真4枚撮影</td></tr>
+          <tr><td class="td-date">2026-05-28</td><td><span class="badge badge-warn">外葉黄変</span></td><td>あり</td><td>黄変あり</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>中央新葉健全、右上葉大黄変・葉先枯死。輸送ダメージ</td></tr>
         </tbody>
       </table></div>
     </div>
@@ -927,7 +973,28 @@
   </footer>
 </div>
 
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img class="lightbox-image" id="lightbox-img" src="" alt="">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
 <script>
+  // === Lightbox ===
+  function openLightbox(src, caption) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-caption').textContent = caption || '';
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
   // === Tab switching ===
   function switchTab(i) {
     document.querySelectorAll('.tab-button').forEach((b,idx)=>b.classList.toggle('active', idx===i));
@@ -1069,6 +1136,7 @@
     }
   });
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>

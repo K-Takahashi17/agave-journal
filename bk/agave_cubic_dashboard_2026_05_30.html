@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+:root {
+  --color-brand-primary: #232425;
+  --color-brand-secondary: #0F7FFF;
+  --color-bg-page: #FFFFFF;
+  --color-bg-surface: #FAFAFA;
+  --color-bg-subtle: #F5F5F5;
+  --color-text-primary: #232425;
+  --color-text-secondary: #606366;
+  --color-text-tertiary: #909499;
+  --color-text-disabled: #C4C7CC;
+  --color-text-link: #0F7FFF;
+  --color-text-on-brand: #FFFFFF;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  --color-border-default: #EAEAEA;
+  --color-border-strong: #D0D3D8;
+  --color-border-subtle: #F2F2F2;
+  --color-border-brand: #0F7FFF;
+  --color-border-error: #EF4444;
+  --color-border-success: #10B981;
+  --space-4: 4px; --space-8: 8px; --space-12: 12px; --space-16: 16px;
+  --space-20: 20px; --space-24: 24px; --space-32: 32px; --space-48: 48px;
+  --text-h1: 36px; --text-h2: 28px; --text-h3: 22px; --text-h4: 18px;
+  --text-body: 16px; --text-small: 14px; --text-caption: 12px;
+  --radius-4: 4px; --radius-8: 8px; --radius-12: 12px;
+  --border-width-1: 1px; --border-width-2: 2px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+
+  /* Categorical color ramps (mirror of design-tokens.css) */
+  --color-cat-blue-50:#EBF3FE;--color-cat-blue-100:#C5DDFC;--color-cat-blue-200:#92BEF8;--color-cat-blue-400:#0F7FFF;--color-cat-blue-600:#0561C5;--color-cat-blue-800:#053F7C;--color-cat-blue-900:#06294F;
+  --color-cat-green-50:#E5F8F1;--color-cat-green-100:#B7EFD8;--color-cat-green-200:#7DE0BA;--color-cat-green-400:#10B981;--color-cat-green-600:#088762;--color-cat-green-800:#045A41;--color-cat-green-900:#023A29;
+  --color-cat-amber-50:#FEF3D9;--color-cat-amber-100:#FCE0A0;--color-cat-amber-200:#FAC865;--color-cat-amber-400:#F59E0B;--color-cat-amber-600:#B16E03;--color-cat-amber-800:#6E4500;--color-cat-amber-900:#422900;
+  --color-cat-red-50:#FDE9E9;--color-cat-red-100:#F9C2C2;--color-cat-red-200:#F49595;--color-cat-red-400:#EF4444;--color-cat-red-600:#C41B1B;--color-cat-red-800:#821212;--color-cat-red-900:#520B0B;
+  --color-cat-purple-50:#F0EAFE;--color-cat-purple-100:#D5C2FB;--color-cat-purple-200:#B59AF8;--color-cat-purple-400:#8B5CF6;--color-cat-purple-600:#6431D2;--color-cat-purple-800:#441E8E;--color-cat-purple-900:#2A1259;
+  --color-cat-teal-50:#DEF7F4;--color-cat-teal-100:#A6EBE2;--color-cat-teal-200:#6BDCCD;--color-cat-teal-400:#14B8A6;--color-cat-teal-600:#0D8779;--color-cat-teal-800:#075A50;--color-cat-teal-900:#043934;
+  --color-cat-coral-50:#FEE7EB;--color-cat-coral-100:#FCC0CA;--color-cat-coral-200:#FA98A8;--color-cat-coral-400:#FB7185;--color-cat-coral-600:#D14258;--color-cat-coral-800:#8C2336;--color-cat-coral-900:#5A111F;
+  --color-cat-pink-50:#FCE4F1;--color-cat-pink-100:#F7BAD9;--color-cat-pink-200:#F18BBE;--color-cat-pink-400:#EC4899;--color-cat-pink-600:#B81F75;--color-cat-pink-800:#7B0F4D;--color-cat-pink-900:#4D0530;
+  --color-cat-gray-50:#F3F4F6;--color-cat-gray-100:#E5E7EB;--color-cat-gray-200:#CBD0D7;--color-cat-gray-400:#6B7280;--color-cat-gray-600:#4A4F58;--color-cat-gray-800:#2A2D33;--color-cat-gray-900:#16181B;
+}
+.c-blue   { fill: var(--color-cat-blue-50);   stroke: var(--color-cat-blue-600);   color: var(--color-cat-blue-800);   background-color: var(--color-cat-blue-50);   border-color: var(--color-cat-blue-600); }
+.c-green  { fill: var(--color-cat-green-50);  stroke: var(--color-cat-green-600);  color: var(--color-cat-green-800);  background-color: var(--color-cat-green-50);  border-color: var(--color-cat-green-600); }
+.c-amber  { fill: var(--color-cat-amber-50);  stroke: var(--color-cat-amber-600);  color: var(--color-cat-amber-800);  background-color: var(--color-cat-amber-50);  border-color: var(--color-cat-amber-600); }
+.c-red    { fill: var(--color-cat-red-50);    stroke: var(--color-cat-red-600);    color: var(--color-cat-red-800);    background-color: var(--color-cat-red-50);    border-color: var(--color-cat-red-600); }
+.c-purple { fill: var(--color-cat-purple-50); stroke: var(--color-cat-purple-600); color: var(--color-cat-purple-800); background-color: var(--color-cat-purple-50); border-color: var(--color-cat-purple-600); }
+.c-teal   { fill: var(--color-cat-teal-50);   stroke: var(--color-cat-teal-600);   color: var(--color-cat-teal-800);   background-color: var(--color-cat-teal-50);   border-color: var(--color-cat-teal-600); }
+.c-coral  { fill: var(--color-cat-coral-50);  stroke: var(--color-cat-coral-600);  color: var(--color-cat-coral-800);  background-color: var(--color-cat-coral-50);  border-color: var(--color-cat-coral-600); }
+.c-pink   { fill: var(--color-cat-pink-50);   stroke: var(--color-cat-pink-600);   color: var(--color-cat-pink-800);   background-color: var(--color-cat-pink-50);   border-color: var(--color-cat-pink-600); }
+.c-gray   { fill: var(--color-cat-gray-50);   stroke: var(--color-cat-gray-600);   color: var(--color-cat-gray-800);   background-color: var(--color-cat-gray-50);   border-color: var(--color-cat-gray-600); }
+.c-blue text, .c-green text, .c-amber text, .c-red text,
+.c-purple text, .c-teal text, .c-coral text, .c-pink text, .c-gray text { fill: currentColor; stroke: none; }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-brand-primary: #E8E9EA;
+    --color-brand-secondary: #4a9eff;
+    --color-bg-page: #1A1B1C;
+    --color-bg-surface: #232425;
+    --color-bg-subtle: #2A2B2C;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #B8BBBF;
+    --color-text-tertiary: #868B92;
+    --color-text-disabled: #4A4C4F;
+    --color-text-link: #8bb8ff;
+    --color-text-on-brand: #1A1B1C;
+    --color-border-default: #3A3B3C;
+    --color-border-strong: #4A4C4F;
+    --color-border-subtle: #2E2F30;
+    --color-border-brand: #4a9eff;
+    --color-border-error: #f87171;
+    --color-border-success: #34d399;
+  }
+  .c-blue   { fill: var(--color-cat-blue-800);   stroke: var(--color-cat-blue-200);   color: var(--color-cat-blue-100);   background-color: var(--color-cat-blue-800);   border-color: var(--color-cat-blue-200); }
+  .c-green  { fill: var(--color-cat-green-800);  stroke: var(--color-cat-green-200);  color: var(--color-cat-green-100);  background-color: var(--color-cat-green-800);  border-color: var(--color-cat-green-200); }
+  .c-amber  { fill: var(--color-cat-amber-800);  stroke: var(--color-cat-amber-200);  color: var(--color-cat-amber-100);  background-color: var(--color-cat-amber-800);  border-color: var(--color-cat-amber-200); }
+  .c-red    { fill: var(--color-cat-red-800);    stroke: var(--color-cat-red-200);    color: var(--color-cat-red-100);    background-color: var(--color-cat-red-800);    border-color: var(--color-cat-red-200); }
+  .c-purple { fill: var(--color-cat-purple-800); stroke: var(--color-cat-purple-200); color: var(--color-cat-purple-100); background-color: var(--color-cat-purple-800); border-color: var(--color-cat-purple-200); }
+  .c-teal   { fill: var(--color-cat-teal-800);   stroke: var(--color-cat-teal-200);   color: var(--color-cat-teal-100);   background-color: var(--color-cat-teal-800);   border-color: var(--color-cat-teal-200); }
+  .c-coral  { fill: var(--color-cat-coral-800);  stroke: var(--color-cat-coral-200);  color: var(--color-cat-coral-100);  background-color: var(--color-cat-coral-800);  border-color: var(--color-cat-coral-200); }
+  .c-pink   { fill: var(--color-cat-pink-800);   stroke: var(--color-cat-pink-200);   color: var(--color-cat-pink-100);   background-color: var(--color-cat-pink-800);   border-color: var(--color-cat-pink-200); }
+  .c-gray   { fill: var(--color-cat-gray-800);   stroke: var(--color-cat-gray-200);   color: var(--color-cat-gray-100);   background-color: var(--color-cat-gray-800);   border-color: var(--color-cat-gray-200); }
+}
+html, body { margin: 0; padding: 0; background: transparent !important; box-sizing: border-box;
+             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans JP', 'Noto Sans KR', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'; }
+*, *::before, *::after { box-sizing: inherit; }
+svg, svg text, svg tspan { font-family: inherit; }
+</style>
+<script>
+function sendPrompt(text) {
+  window.parent.postMessage(
+    { type: 'genspark_visualize_send_prompt', text: String(text) }, '*'
+  );
+}
+function _reportHeight() {
+  var h = Math.max(
+    document.body ? document.body.scrollHeight : 0,
+    document.documentElement ? document.documentElement.scrollHeight : 0,
+    100
+  );
+  window.parent.postMessage({ type: 'genspark_visualize_height', height: h }, '*');
+}
+window.addEventListener('load', function() {
+  _reportHeight();
+  if (window.ResizeObserver) {
+    new ResizeObserver(_reportHeight).observe(document.body);
+  }
+});
+window.addEventListener('resize', _reportHeight);
+</script>
+</head>
+<body><div style="width:100%; max-width:758px; font-family:system-ui,-apple-system,sans-serif; color:var(--color-text-primary);">
+  <style>
+    .header {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      padding: var(--space-24);
+      border-radius: var(--radius-12);
+      color: white;
+      margin-bottom: var(--space-24);
+    }
+    .header h1 {
+      margin: 0 0 var(--space-8) 0;
+      font-size: var(--text-h2);
+      font-weight: 600;
+    }
+    .header .meta {
+      opacity: 0.95;
+      font-size: var(--text-small);
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: var(--space-16);
+      margin-bottom: var(--space-24);
+    }
+    .kpi-card {
+      background: var(--color-bg-surface);
+      border: var(--border-width-1) solid var(--color-border-default);
+      border-radius: var(--radius-12);
+      padding: var(--space-16);
+      text-align: center;
+    }
+    .kpi-icon {
+      font-size: 28px;
+      margin-bottom: var(--space-8);
+    }
+    .kpi-value {
+      font-size: var(--text-h3);
+      font-weight: 600;
+      margin: var(--space-4) 0;
+    }
+    .kpi-label {
+      font-size: var(--text-small);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-4);
+    }
+    .kpi-status {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-4);
+      font-size: var(--text-caption);
+      font-weight: 500;
+      margin-top: var(--space-4);
+    }
+    .status-ok {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+    .status-warning {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+    .status-alert {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+    .section {
+      background: var(--color-bg-surface);
+      border: var(--border-width-1) solid var(--color-border-default);
+      border-radius: var(--radius-12);
+      padding: var(--space-20);
+      margin-bottom: var(--space-16);
+    }
+    .section h2 {
+      font-size: var(--text-h4);
+      font-weight: 600;
+      margin: 0 0 var(--space-16) 0;
+      color: var(--color-text-primary);
+    }
+    .chart-container {
+      width: 100%;
+      height: 200px;
+      margin-top: var(--space-12);
+    }
+    .alert-box {
+      background: #FEF3C7;
+      border-left: 4px solid #F59E0B;
+      padding: var(--space-12);
+      border-radius: var(--radius-8);
+      margin-bottom: var(--space-12);
+      font-size: var(--text-small);
+    }
+    .milestone-item {
+      display: flex;
+      align-items: center;
+      padding: var(--space-12);
+      border-bottom: var(--border-width-1) solid var(--color-border-subtle);
+    }
+    .milestone-item:last-child {
+      border-bottom: none;
+    }
+    .milestone-date {
+      font-weight: 600;
+      color: var(--color-brand-secondary);
+      margin-right: var(--space-12);
+      min-width: 100px;
+    }
+    .milestone-countdown {
+      background: var(--color-bg-subtle);
+      padding: 2px 8px;
+      border-radius: var(--radius-4);
+      font-size: var(--text-caption);
+      margin-left: auto;
+    }
+    .timeline {
+      position: relative;
+      padding-left: var(--space-24);
+      margin-top: var(--space-16);
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: var(--space-16);
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -18px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-border-default);
+    }
+    .timeline-item.active::before {
+      background: var(--color-success);
+      box-shadow: 0 0 0 4px #D1FAE5;
+    }
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: -13px;
+      top: 18px;
+      width: 2px;
+      height: calc(100% - 6px);
+      background: var(--color-border-subtle);
+    }
+    .timeline-item:last-child::after {
+      display: none;
+    }
+    .timeline-phase {
+      font-weight: 600;
+      font-size: var(--text-small);
+    }
+    .timeline-detail {
+      font-size: var(--text-caption);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-4);
+    }
+    .footer {
+      text-align: center;
+      padding: var(--space-16);
+      font-size: var(--text-caption);
+      color: var(--color-text-secondary);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-small);
+    }
+    th {
+      text-align: left;
+      padding: var(--space-8);
+      border-bottom: var(--border-width-2) solid var(--color-border-default);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+    }
+    td {
+      padding: var(--space-8);
+      border-bottom: var(--border-width-1) solid var(--color-border-subtle);
+    }
+  </style>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>🌵 アガベ・キュービック錦 育成ダッシュボード</h1>
+    <div class="meta">
+      📅 迎え入れ日：2026-05-23 | 🗓️ 本日：2026-05-30 | 🌱 育成日数：<strong>7日目</strong> | 📊 総レコード：28件
+    </div>
+    <div class="meta" style="margin-top:var(--space-8);">
+      🔄 現在フェーズ：<strong>養生期 → 本格運用期（移行完了）</strong>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon">🌡️</div>
+      <div class="kpi-label">現在温度</div>
+      <div class="kpi-value">25.6°C</div>
+      <span class="kpi-status status-ok">✅ 理想レンジ</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">💧</div>
+      <div class="kpi-label">現在湿度</div>
+      <div class="kpi-value">45%</div>
+      <span class="kpi-status status-ok">✅ 理想レンジ</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">⚖️</div>
+      <div class="kpi-label">現在重量</div>
+      <div class="kpi-value">374.0g</div>
+      <span class="kpi-status status-ok">✅ 給水直後</span>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📅</div>
+      <div class="kpi-label">次回給水予想</div>
+      <div class="kpi-value">3日後</div>
+      <span class="kpi-status status-ok">2026-06-03頃</span>
+    </div>
+  </div>
+
+  <!-- 重量推移グラフ -->
+  <div class="section">
+    <h2>📈 重量推移（全期間）</h2>
+    <canvas id="weightChart" class="chart-container"></canvas>
+  </div>
+
+  <!-- 温湿度推移 -->
+  <div class="section">
+    <h2>🌡️💧 温湿度推移</h2>
+    <canvas id="tempHumidChart" class="chart-container"></canvas>
+  </div>
+
+  <!-- アラート -->
+  <div class="section">
+    <h2>🚨 アラート・通知</h2>
+    <div style="color:var(--color-text-secondary); font-size:var(--text-small);">
+      ✅ 現在、重要な警告はありません。<br>
+      💡 2026-05-30 12:27に湿度24%を記録（要警戒水準）しましたが、夜間に45%へ回復済み。<br>
+      📌 次回LED運用確認日：2026-06-06頃（12時間運用の安定性確認）
+    </div>
+  </div>
+
+  <!-- 最新ログサマリー -->
+  <div class="section">
+    <h2>📋 最新ログサマリー（各カテゴリ最新3件）</h2>
+    
+    <h3 style="font-size:var(--text-small); font-weight:600; margin-top:var(--space-16); margin-bottom:var(--space-8);">計測ログ</h3>
+    <table>
+      <tr><th>日時</th><th>重量(g)</th><th>室温</th><th>湿度</th></tr>
+      <tr><td>2026-05-30 22:00</td><td>374.0</td><td>-</td><td>-</td></tr>
+      <tr><td>2026-05-30 22:00</td><td>328.6</td><td>-</td><td>-</td></tr>
+      <tr><td>2026-05-30 12:27</td><td>328.7</td><td>26.8°C</td><td>24%</td></tr>
+    </table>
+
+    <h3 style="font-size:var(--text-small); font-weight:600; margin-top:var(--space-16); margin-bottom:var(--space-8);">給水ログ</h3>
+    <table>
+      <tr><th>日時</th><th>給水量</th><th>備考</th></tr>
+      <tr><td>2026-05-30 22:00</td><td>約45g</td><td>2回目給水、保水容量確定</td></tr>
+      <tr><td>2026-05-27 22:00</td><td>約47g</td><td>初回給水</td></tr>
+    </table>
+  </div>
+
+  <!-- 次回マイルストーン -->
+  <div class="section">
+    <h2>🎯 次回マイルストーン</h2>
+    <div class="milestone-item">
+      <span class="milestone-date">2026-06-06頃</span>
+      <span style="flex:1;">LED運用12時間の安定性確認、13時間延長検討</span>
+      <span class="milestone-countdown">あと7日</span>
+    </div>
+    <div class="milestone-item">
+      <span class="milestone-date">2026-12頃</span>
+      <span style="flex:1;">植え替え準備の見直し</span>
+      <span class="milestone-countdown">あと約6ヶ月</span>
+    </div>
+    <div class="milestone-item">
+      <span class="milestone-date">2027年春</span>
+      <span style="flex:1;">初回鉢増し（根っこつよし3号へ）</span>
+      <span class="milestone-countdown">あと約10ヶ月</span>
+    </div>
+  </div>
+
+  <!-- 長期ロードマップ進捗 -->
+  <div class="section">
+    <h2>🗺️ 長期ロードマップ進捗（5年計画）</h2>
+    <div class="timeline">
+      <div class="timeline-item active">
+        <div class="timeline-phase">📍 2026/05〜2026/12：養生期</div>
+        <div class="timeline-detail">プレステラ深型90維持 | 現在地：7日目（本格運用期移行完了）</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase">2027年春：初回鉢増し</div>
+        <div class="timeline-detail">根っこつよし3号へ | ROCKさんの1.2〜1.5倍ルール準拠</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase">2028年春：2回目鉢増し</div>
+        <div class="timeline-detail">プレステラ深型120相当 or 根っこつよし3.5号へ</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase">2029年春：3回目鉢増し</div>
+        <div class="timeline-detail">菊鉢5号 or 八角鉢4〜5寸へ</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase">2030年〜：大株化完成</div>
+        <div class="timeline-detail">菊鉢6〜7号で最終フェーズ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    最終更新：2026-05-30 23:00 | 総レコード数：28件 | Dashboard v1.0<br>
+    Powered by アルシーヴ（Archive） - アガベ育成記録管理システム
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // 重量推移グラフ
+    new Chart(document.getElementById('weightChart'), {
+      type: 'line',
+      data: {
+        labels: ['5/27 10:26', '5/27 夕方', '5/27 給水後', '5/28 11:20', '5/29 11:53', '5/30 12:27', '5/30 22:00前', '5/30 22:00後'],
+        datasets: [{
+          label: '鉢込み重量(g)',
+          data: [333.7, 328.6, 375.3, 355.4, 340.7, 328.7, 328.6, 374.0],
+          borderColor: '#10B981',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#10B981',
+          tension: 0.3
+        },
+        {
+          label: '給水適期目安(335g)',
+          data: [335, 335, 335, 335, 335, 335, 335, 335],
+          borderColor: '#F59E0B',
+          borderWidth: 1,
+          borderDash: [5, 5],
+          pointRadius: 0,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, position: 'top' }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            min: 320,
+            max: 380,
+            grid: { color: '#F2F2F2', lineWidth: 0.5 }
+          },
+          x: {
+            grid: { display: false }
+          }
+        }
+      }
+    });
+
+    // 温湿度推移グラフ
+    new Chart(document.getElementById('tempHumidChart'), {
+      type: 'line',
+      data: {
+        labels: ['5/27 10:26', '5/29 11:53', '5/30 12:27', '5/30 23:00'],
+        datasets: [{
+          label: '室温(℃)',
+          data: [28.1, 26.2, 26.8, 25.6],
+          borderColor: '#EF4444',
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          borderWidth: 2,
+          pointRadius: 4,
+          yAxisID: 'y'
+        },
+        {
+          label: '湿度(%)',
+          data: [44, 49, 24, 45],
+          borderColor: '#3B82F6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderWidth: 2,
+          pointRadius: 4,
+          yAxisID: 'y1'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, position: 'top' }
+        },
+        scales: {
+          y: {
+            type: 'linear',
+            position: 'left',
+            min: 15,
+            max: 35,
+            title: { display: true, text: '温度(℃)' },
+            grid: { color: '#F2F2F2', lineWidth: 0.5 }
+          },
+          y1: {
+            type: 'linear',
+            position: 'right',
+            min: 0,
+            max: 100,
+            title: { display: true, text: '湿度(%)' },
+            grid: { display: false }
+          },
+          x: {
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  </script>
+</div></body>
+</html>

@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>キュービック錦 育成記録 - Botanical Journal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --sage-50: #F4F6F2;
+    --sage-100: #E8EDE3;
+    --sage-200: #C9D4BD;
+    --sage-400: #8FA47A;
+    --sage-600: #5C7148;
+    --sage-800: #3A4A2D;
+    --sage-900: #232E1B;
+    --cream-50: #FDFBF5;
+    --cream-100: #F7F2E4;
+    --cream-200: #EDE3C8;
+    --terracotta-400: #C97B5A;
+    --terracotta-600: #A05A3F;
+    --ink: #2D2A24;
+    --ink-soft: #5C5851;
+    --ink-mute: #908A7E;
+    --paper: #FDFBF5;
+    --line: #DDD5C0;
+  }
+  body {
+    font-family: 'Noto Serif JP', 'Cormorant Garamond', serif;
+    background: var(--cream-50);
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(143,164,122,0.04) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(201,123,90,0.03) 0%, transparent 40%);
+    color: var(--ink);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .container { max-width: 1240px; margin: 0 auto; padding: 32px; }
+
+  /* === Header === */
+  .header {
+    background: linear-gradient(135deg, var(--sage-800) 0%, var(--sage-900) 100%);
+    border-radius: 20px;
+    padding: 48px 56px;
+    color: var(--cream-50);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 40px rgba(58,74,45,0.15);
+  }
+  .header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath d='M100 20 Q120 60 100 100 Q80 60 100 20 M100 100 Q140 110 160 150 Q130 140 100 100 M100 100 Q60 110 40 150 Q70 140 100 100 M100 100 Q110 140 130 180 Q105 155 100 100 M100 100 Q90 140 70 180 Q95 155 100 100' fill='none' stroke='%23F7F2E4' stroke-width='1.5' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 280px;
+    background-position: right -30px bottom -30px;
+    background-repeat: no-repeat;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    letter-spacing: 0.15em;
+    opacity: 0.75;
+    margin-bottom: 8px;
+    position: relative; z-index: 1;
+  }
+  .header h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 38px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    position: relative; z-index: 1;
+  }
+  .header-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    opacity: 0.7;
+    margin-bottom: 24px;
+    position: relative; z-index: 1;
+  }
+  .header-meta {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    position: relative; z-index: 1;
+  }
+  .meta-chip {
+    background: rgba(247,242,228,0.12);
+    border: 1px solid rgba(247,242,228,0.2);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    backdrop-filter: blur(8px);
+  }
+  .meta-chip strong { color: var(--cream-100); font-weight: 600; }
+  .export-buttons { position: absolute; top: 32px; right: 32px; display: flex; gap: 8px; z-index: 2; }
+  .export-btn {
+    background: rgba(247,242,228,0.15);
+    border: 1px solid rgba(247,242,228,0.25);
+    color: var(--cream-50);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .export-btn:hover { background: rgba(247,242,228,0.25); }
+
+  /* === Tabs === */
+  .tab-bar {
+    display: flex; gap: 2px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .tab-button {
+    padding: 14px 22px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-mute);
+    white-space: nowrap;
+    transition: all 0.25s;
+  }
+  .tab-button:hover { color: var(--sage-600); background: var(--sage-50); }
+  .tab-button.active {
+    color: var(--sage-800);
+    border-bottom-color: var(--sage-600);
+    font-weight: 600;
+  }
+  .tab-content { display: none; animation: fadeIn 0.4s ease; }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* === Cards / Sections === */
+  .section {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(45,42,36,0.04);
+  }
+  .section-header {
+    display: flex; align-items: baseline;
+    gap: 12px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--sage-100);
+    padding-bottom: 16px;
+  }
+  .section-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--terracotta-600);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+  }
+  .section h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--sage-800);
+    letter-spacing: 0.02em;
+  }
+  .section h2 .count {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-mute);
+    font-weight: 400;
+    font-size: 16px;
+    margin-left: 8px;
+  }
+
+  /* === Specimen card (株情報) === */
+  .specimen-card {
+    background: linear-gradient(135deg, var(--sage-50) 0%, var(--cream-100) 100%);
+    border: 1px solid var(--sage-200);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  .specimen-emblem {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--sage-200);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: inset 0 0 20px rgba(143,164,122,0.1);
+  }
+  .specimen-emblem svg { width: 70px; height: 70px; }
+  .specimen-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--sage-600);
+    margin-bottom: 4px;
+  }
+  .specimen-jpname {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--sage-900);
+    margin-bottom: 12px;
+  }
+  .specimen-info {
+    display: flex; flex-wrap: wrap; gap: 8px 24px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .specimen-info span::before { content: '◦ '; color: var(--sage-400); }
+
+  /* === Observation cards (KPI) === */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+    position: relative;
+    transition: transform 0.25s, box-shadow 0.25s;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    opacity: 0.08;
+  }
+  .kpi-card.temp::before { background: var(--terracotta-400); }
+  .kpi-card.humid::before { background: var(--sage-400); }
+  .kpi-card.weight::before { background: var(--sage-600); }
+  .kpi-card.next::before { background: var(--cream-200); opacity: 0.4; }
+  .kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(45,42,36,0.08);
+  }
+  .kpi-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--terracotta-600);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+    position: relative; z-index: 1;
+  }
+  .kpi-label {
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    margin-bottom: 14px;
+    position: relative; z-index: 1;
+  }
+  .kpi-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--sage-900);
+    line-height: 1;
+    margin-bottom: 12px;
+    font-feature-settings: "tnum";
+    position: relative; z-index: 1;
+  }
+  .kpi-value .unit {
+    font-size: 18px;
+    color: var(--ink-mute);
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  .kpi-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    position: relative; z-index: 1;
+  }
+  .status-ok { background: var(--sage-100); color: var(--sage-800); }
+  .status-info { background: #DCEAF5; color: #2A5F8F; }
+  .status-warn { background: var(--cream-200); color: var(--terracotta-600); }
+
+  /* === Chart === */
+  .chart-container {
+    width: 100%;
+    height: 320px;
+    position: relative;
+  }
+
+  /* === Alert === */
+  .alert-box {
+    background: var(--cream-100);
+    border-left: 3px solid var(--terracotta-400);
+    padding: 18px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+  .alert-box strong { color: var(--terracotta-600); }
+
+  /* === Milestone === */
+  .milestone-item {
+    background: var(--sage-50);
+    border-left: 3px solid var(--sage-400);
+    padding: 18px 22px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 20px;
+    transition: all 0.2s;
+  }
+  .milestone-item:hover {
+    background: var(--sage-100);
+    transform: translateX(4px);
+  }
+  .milestone-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    color: var(--sage-800);
+    min-width: 110px;
+    font-size: 15px;
+    font-style: italic;
+  }
+  .milestone-content { flex: 1; font-size: 14px; color: var(--ink); }
+  .milestone-countdown {
+    background: var(--sage-600);
+    color: var(--cream-50);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.05em;
+  }
+
+  /* === Timeline === */
+  .timeline { position: relative; padding-left: 36px; margin-top: 16px; }
+  .timeline-item { position: relative; padding-bottom: 28px; }
+  .timeline-icon {
+    position: absolute;
+    left: -36px;
+    top: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--sage-200);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    z-index: 2;
+  }
+  .timeline-item.active .timeline-icon {
+    background: var(--sage-100);
+    border-color: var(--sage-600);
+    box-shadow: 0 0 0 4px rgba(143,164,122,0.2);
+    animation: breathe 3s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(143,164,122,0.2); }
+    50% { box-shadow: 0 0 0 8px rgba(143,164,122,0.1); }
+  }
+  .timeline-item::after {
+    content: '';
+    position: absolute;
+    left: -21px; top: 32px;
+    width: 2px;
+    height: calc(100% - 32px);
+    background: var(--sage-200);
+  }
+  .timeline-item:last-child::after { display: none; }
+  .timeline-phase {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--sage-800);
+    margin-bottom: 4px;
+  }
+  .timeline-year {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--terracotta-600);
+    font-size: 14px;
+    margin-left: 8px;
+  }
+  .timeline-detail { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+  /* === Tables === */
+  .search-box { margin-bottom: 20px; }
+  .search-input {
+    width: 100%; max-width: 400px;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    background: var(--paper);
+    color: var(--ink);
+    transition: all 0.2s;
+  }
+  .search-input:focus {
+    outline: none;
+    border-color: var(--sage-600);
+    box-shadow: 0 0 0 3px rgba(143,164,122,0.15);
+  }
+  .table-wrapper { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--sage-200);
+    font-weight: 600;
+    color: var(--sage-800);
+    background: var(--sage-50);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Inter', 'Noto Serif JP', sans-serif;
+  }
+  td {
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--sage-100);
+    color: var(--ink);
+    vertical-align: top;
+  }
+  tr:hover td { background: var(--cream-100); }
+  .td-num { text-align: right; font-feature-settings: "tnum"; font-weight: 500; }
+  .td-date { white-space: nowrap; min-width: 130px; font-weight: 500; color: var(--sage-700); }
+  .td-long { min-width: 220px; }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .badge-good { background: var(--sage-100); color: var(--sage-800); }
+  .badge-warn { background: var(--cream-200); color: var(--terracotta-600); }
+  .badge-info { background: #DCEAF5; color: #2A5F8F; }
+  .photo-placeholder {
+    width: 64px; height: 64px;
+    border-radius: 6px;
+    background: var(--sage-50);
+    border: 1px dashed var(--sage-200);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    color: var(--sage-400);
+  }
+
+  /* === Footer === */
+  .footer {
+    text-align: center;
+    padding: 32px 16px;
+    margin-top: 24px;
+    border-top: 1px solid var(--sage-100);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-mute);
+  }
+  .footer-divider {
+    width: 60px; height: 1px;
+    background: var(--sage-300);
+    margin: 12px auto;
+  }
+
+  /* === Dark mode === */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1F2419;
+      --cream-50: #14180F;
+      --cream-100: #2A2F23;
+      --cream-200: #3A4030;
+      --ink: #EDE8D5;
+      --ink-soft: #C8C2AE;
+      --ink-mute: #908A78;
+      --line: #3D4232;
+      --sage-50: #2A3022;
+      --sage-100: #364030;
+      --sage-200: #4A5840;
+      --sage-400: #A8BD92;
+      --sage-600: #C2D5AC;
+      --sage-800: #E0EBCF;
+      --sage-900: #F0F5E5;
+      --terracotta-400: #E89A78;
+      --terracotta-600: #F0B090;
+    }
+    body { background: var(--cream-50); }
+
+    /* ヘッダーのSVGイラスト透明度を抑制 */
+    .header::before { opacity: 0.08; }
+
+    /* KPIカード装飾円の透明度調整 */
+    .kpi-card.temp::before { background: var(--terracotta-400); opacity: 0.12; }
+    .kpi-card.humid::before { background: var(--sage-400); opacity: 0.12; }
+    .kpi-card.weight::before { background: var(--sage-600); opacity: 0.12; }
+    .kpi-card.next::before { background: var(--cream-200); opacity: 0.3; }
+
+    /* バッジ類の視認性 */
+    .status-ok { background: rgba(168,189,146,0.2); color: #C2D5AC; }
+    .status-info { background: rgba(120,160,200,0.2); color: #9EC0E5; }
+    .status-warn { background: rgba(232,154,120,0.2); color: #F0B090; }
+    .badge-good { background: rgba(168,189,146,0.2); color: #C2D5AC; }
+    .badge-warn { background: rgba(232,154,120,0.2); color: #F0B090; }
+    .badge-info { background: rgba(120,160,200,0.2); color: #9EC0E5; }
+
+    /* 株情報カード */
+    .specimen-card {
+      background: linear-gradient(135deg, #2A3022 0%, #232E1B 100%);
+      border-color: var(--sage-200);
+    }
+    .specimen-emblem {
+      background: #1A1F14;
+      border-color: var(--sage-200);
+    }
+
+    /* テーブル */
+    th { background: #2A3022; color: #C2D5AC; border-bottom-color: var(--sage-200); }
+    td { color: var(--ink); border-bottom-color: #2E3326; }
+    tr:hover td { background: #2A2F23; }
+
+    /* 検索ボックス */
+    .search-input { background: #2A2F23; border-color: var(--line); color: var(--ink); }
+
+    /* マイルストーン */
+    .milestone-item { background: #2A3022; border-left-color: var(--sage-400); }
+    .milestone-item:hover { background: #364030; }
+    .milestone-date { color: var(--sage-800); }
+    .milestone-content { color: var(--ink); }
+
+    /* タイムライン */
+    .timeline-icon { background: #1F2419; border-color: var(--sage-200); }
+    .timeline-item.active .timeline-icon {
+      background: #364030;
+      border-color: var(--sage-400);
+      box-shadow: 0 0 0 4px rgba(168,189,146,0.2);
+    }
+    .timeline-item::after { background: var(--sage-200); }
+    .timeline-phase { color: var(--sage-800); }
+    .timeline-detail { color: var(--ink-soft); }
+
+    /* セクション見出し */
+    .section h2 { color: var(--sage-800); }
+    .section-header { border-bottom-color: var(--sage-200); }
+
+    /* アラート */
+    .alert-box {
+      background: rgba(232,154,120,0.08);
+      color: var(--ink);
+      border-left-color: var(--terracotta-400);
+    }
+    .alert-box strong { color: var(--terracotta-600); }
+
+    /* タブ */
+    .tab-button { color: var(--ink-mute); }
+    .tab-button:hover { color: var(--sage-600); background: #2A3022; }
+    .tab-button.active { color: var(--sage-800); border-bottom-color: var(--sage-400); }
+    .tab-bar { border-bottom-color: var(--line); }
+
+    /* 写真プレースホルダ */
+    .photo-placeholder { background: #2A3022; border-color: var(--sage-200); color: var(--sage-400); }
+  }
+
+
+  /* === Responsive === */
+  @media (max-width: 768px) {
+    .container { padding: 16px; }
+    .header { padding: 32px 24px; }
+    .header h1 { font-size: 28px; }
+    .export-buttons { position: static; margin-top: 16px; }
+    .specimen-card { grid-template-columns: 1fr; text-align: center; gap: 16px; }
+    .kpi-grid { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    .tab-bar, .export-buttons, .search-box { display: none !important; }
+    .tab-content { display: block !important; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ===== Header ===== -->
+  <header class="header">
+    <div class="export-buttons">
+      <button class="export-btn" onclick="exportCSV()">📥 CSV出力</button>
+      <button class="export-btn" onclick="window.print()">🖨️ 印刷</button>
+    </div>
+    <div class="header-eyebrow">— BOTANICAL JOURNAL —</div>
+    <h1>キュービック錦 育成記録</h1>
+    <div class="header-subtitle">Agave potatorum 'Cubic Kink' — Growth Diary</div>
+    <div class="header-meta">
+      <span class="meta-chip">迎え入れ <strong>2026-05-23</strong></span>
+      <span class="meta-chip">本日 <strong>2026-05-31</strong></span>
+      <span class="meta-chip">育成 <strong>8日目</strong></span>
+      <span class="meta-chip">記録 <strong>34件</strong></span>
+      <span class="meta-chip">フェーズ <strong>養生期 / 順応完了直後</strong></span>
+    </div>
+  </header>
+
+  <!-- ===== Tabs ===== -->
+  <nav class="tab-bar">
+    <button class="tab-button active" onclick="switchTab(0)">📊 ダッシュボード</button>
+    <button class="tab-button" onclick="switchTab(1)">⚖️ 計測ログ</button>
+    <button class="tab-button" onclick="switchTab(2)">🌡️ 環境ログ</button>
+    <button class="tab-button" onclick="switchTab(3)">💧 給水ログ</button>
+    <button class="tab-button" onclick="switchTab(4)">🔍 観察ログ</button>
+    <button class="tab-button" onclick="switchTab(5)">📌 イベントログ</button>
+    <button class="tab-button" onclick="switchTab(6)">🎯 判断ログ</button>
+  </nav>
+
+  <!-- ===== Tab 0: Dashboard ===== -->
+  <section class="tab-content active" id="tab0">
+
+    <!-- Specimen card -->
+    <div class="specimen-card">
+      <div class="specimen-emblem">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <g fill="none" stroke="#5C7148" stroke-width="2" stroke-linecap="round">
+            <path d="M50 85 Q48 60 50 25 Q52 60 50 85"/>
+            <path d="M50 80 Q30 65 18 40 Q35 60 50 75"/>
+            <path d="M50 80 Q70 65 82 40 Q65 60 50 75"/>
+            <path d="M50 82 Q35 75 22 65 Q40 75 50 80"/>
+            <path d="M50 82 Q65 75 78 65 Q60 75 50 80"/>
+          </g>
+          <circle cx="50" cy="85" r="2" fill="#A05A3F"/>
+        </svg>
+      </div>
+      <div>
+        <div class="specimen-name">Agave potatorum 'Cubic Kink'</div>
+        <div class="specimen-jpname">アガベ・キュービック錦</div>
+        <div class="specimen-info">
+          <span>覆輪斑入り</span>
+          <span>プレステラ深型90</span>
+          <span>名古屋・室内栽培</span>
+          <span>用土:ロイヤル長久手</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card temp">
+        <div class="kpi-eyebrow">TEMPERATURE</div>
+        <div class="kpi-label">🌡️ 室温</div>
+        <div class="kpi-value">25.6<span class="unit">℃</span></div>
+        <span class="kpi-status status-ok">✓ 適温レンジ内</span>
+      </div>
+      <div class="kpi-card humid">
+        <div class="kpi-eyebrow">HUMIDITY</div>
+        <div class="kpi-label">💧 湿度</div>
+        <div class="kpi-value">45<span class="unit">%</span></div>
+        <span class="kpi-status status-ok">✓ 理想レンジ内</span>
+      </div>
+      <div class="kpi-card weight">
+        <div class="kpi-eyebrow">WEIGHT</div>
+        <div class="kpi-label">⚖️ 鉢込み重量</div>
+        <div class="kpi-value">374.0<span class="unit">g</span></div>
+        <span class="kpi-status status-info">💧 給水直後</span>
+      </div>
+      <div class="kpi-card next">
+        <div class="kpi-eyebrow">NEXT WATERING</div>
+        <div class="kpi-label">📅 次回給水予想</div>
+        <div class="kpi-value">3<span class="unit">日後</span></div>
+        <span class="kpi-status status-warn">2026-06-03 頃</span>
+      </div>
+    </div>
+
+    <!-- Weight chart -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— CHART I —</span>
+        <h2>重量推移</h2>
+      </div>
+      <div class="chart-container"><canvas id="weightChart"></canvas></div>
+    </div>
+
+    <!-- Temp / humid chart -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— CHART II —</span>
+        <h2>温湿度推移</h2>
+      </div>
+      <div class="chart-container"><canvas id="envChart"></canvas></div>
+    </div>
+
+    <!-- Alert -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— NOTES —</span>
+        <h2>現在の所見</h2>
+      </div>
+      <div class="alert-box">
+        次回給水は<strong>約3〜4日後（2026-06-03〜04頃）</strong>を予定。2026-05-30 12:27時点で湿度が<strong>24%</strong>まで急降下しましたが、エアコン停止と窓開け、外気の低湿度が原因。給水および夜間気温低下により23:00には<strong>45%</strong>まで回復し、現在は理想レンジ内です。LED12時間運用は順調、2026-06-06以降に13時間延長を検討します。
+      </div>
+    </div>
+
+    <!-- Milestones -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— UPCOMING —</span>
+        <h2>次回マイルストーン</h2>
+      </div>
+      <div class="milestone-item">
+        <span class="milestone-date">2026-06-06</span>
+        <span class="milestone-content">LED照射時間 12h → 13h への延長検討</span>
+        <span class="milestone-countdown">7 DAYS</span>
+      </div>
+      <div class="milestone-item">
+        <span class="milestone-date">2026-12</span>
+        <span class="milestone-content">養生期完了、用土確認・植え替え準備開始</span>
+        <span class="milestone-countdown">6 MONTHS</span>
+      </div>
+      <div class="milestone-item">
+        <span class="milestone-date">2027 Spring</span>
+        <span class="milestone-content">初回鉢増し（根っこつよし3号予定）</span>
+        <span class="milestone-countdown">10 MONTHS</span>
+      </div>
+    </div>
+
+    <!-- Roadmap -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— LONG-TERM —</span>
+        <h2>5年育成ロードマップ</h2>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item active">
+          <div class="timeline-icon">🌱</div>
+          <div class="timeline-phase">養生期<span class="timeline-year">2026/05 — 2026/12</span></div>
+          <div class="timeline-detail">現在地：迎え入れから7日目。LED12h・湿度40〜60%維持・新葉展開を待機。プレステラ深型90のまま根の充実を最優先。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-icon">🪴</div>
+          <div class="timeline-phase">初回鉢増し<span class="timeline-year">2027 Spring</span></div>
+          <div class="timeline-detail">根っこつよし3号（Φ90×138mm）へ。容量を1.2〜1.5倍へ穏やかにスケールアップ。用土はアガベ専用配合へ更新。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-icon">🌿</div>
+          <div class="timeline-phase">2回目鉢増し<span class="timeline-year">2028 Spring</span></div>
+          <div class="timeline-detail">プレステラ120または3.5号相当へ。株径10〜13cm、葉数20枚前後を想定。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-icon">🌵</div>
+          <div class="timeline-phase">3回目鉢増し<span class="timeline-year">2029 Spring</span></div>
+          <div class="timeline-detail">菊鉢5号または4〜5寸八角鉢へ。株径15〜18cmの中株域に到達。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-icon">🏛️</div>
+          <div class="timeline-phase">大株化完成<span class="timeline-year">2030 〜</span></div>
+          <div class="timeline-detail">菊鉢6〜7号、株径20cm超の市場価値ある中〜大株へ。観賞用陶器鉢への移行も検討。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Tab 1: Measurement ===== -->
+  <section class="tab-content" id="tab1">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— LOG I —</span>
+        <h2>計測ログ<span class="count">8 entries</span></h2>
+      </div>
+      <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table1')"></div>
+      <div class="table-wrapper"><table id="table1">
+        <thead><tr><th>日時</th><th class="td-num">鉢込み重量(g)</th><th class="td-num">前回比(g)</th><th>所感</th></tr></thead>
+        <tbody>
+          <tr><td class="td-date">2026-05-31 16:00</td><td class="td-num">344.6</td><td class="td-num">-29.4</td><td>給水後18hで-29.4g、本格LED運用初日のためペース速め</td></tr>
+          <tr><td class="td-date">2026-05-27 10:26</td><td class="td-num">333.7</td><td class="td-num">—</td><td>外側3枚黄変・張りなし、初回計測</td></tr>
+          <tr><td class="td-date">2026-05-27 22:00 給水前</td><td class="td-num">328.6</td><td class="td-num">-5.1</td><td>乾燥重量ベンチマーク取得</td></tr>
+          <tr><td class="td-date">2026-05-27 22:00 給水後</td><td class="td-num">375.3</td><td class="td-num">+46.7</td><td>初回満水基準確定</td></tr>
+          <tr><td class="td-date">2026-05-28 11:20</td><td class="td-num">355.4</td><td class="td-num">-19.9</td><td>14hで-19.9g、根機能良好の兆候</td></tr>
+          <tr><td class="td-date">2026-05-29 11:53</td><td class="td-num">340.7</td><td class="td-num">-14.7</td><td>24.5hで-14.7g、葉の張り改善</td></tr>
+          <tr><td class="td-date">2026-05-30 12:27</td><td class="td-num">328.7</td><td class="td-num">-12.0</td><td>給水適期に到達</td></tr>
+          <tr><td class="td-date">2026-05-30 22:00 給水前</td><td class="td-num">328.6</td><td class="td-num">-0.1</td><td>2回目給水直前</td></tr>
+          <tr><td class="td-date">2026-05-30 22:00 給水後</td><td class="td-num">374.0</td><td class="td-num">+45.4</td><td>2回目満水到達</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ===== Tab 2: Environment ===== -->
+  <section class="tab-content" id="tab2">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— LOG II —</span>
+        <h2>環境ログ<span class="count">4 entries</span></h2>
+      </div>
+      <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table2')"></div>
+      <div class="table-wrapper"><table id="table2">
+        <thead><tr><th>日時</th><th class="td-num">室温(℃)</th><th class="td-num">湿度(%)</th><th class="td-num">照度(lux)</th><th class="td-num">CO₂(ppm)</th><th class="td-long">所感</th></tr></thead>
+        <tbody>
+          <tr><td class="td-date">2026-05-31 16:00</td><td class="td-num">27.9</td><td class="td-num">39 ⚠️</td><td class="td-num">—</td><td class="td-num">—</td><td>LED40cm接近の影響か、湿度が理想下限を下回る</td></tr>
+          <tr><td class="td-date">2026-05-27 10:26</td><td class="td-num">28.1</td><td class="td-num">44</td><td class="td-num">—</td><td class="td-num">—</td><td>初回計測時の環境</td></tr>
+          <tr><td class="td-date">2026-05-29 11:53</td><td class="td-num">26.2</td><td class="td-num">49</td><td class="td-num">—</td><td class="td-num">—</td><td>理想レンジ内、安定</td></tr>
+          <tr><td class="td-date">2026-05-30 12:27</td><td class="td-num">26.8</td><td class="td-num">24 ⚠️</td><td class="td-num">—</td><td class="td-num">—</td><td>エアコン停止＋窓開け、外気湿度低下が要因</td></tr>
+          <tr><td class="td-date">2026-05-30 23:00</td><td class="td-num">25.6</td><td class="td-num">45</td><td class="td-num">—</td><td class="td-num">—</td><td>給水と夜間気温低下で湿度回復</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ===== Tab 3: Watering ===== -->
+  <section class="tab-content" id="tab3">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— LOG III —</span>
+        <h2>給水ログ<span class="count">2 entries</span></h2>
+      </div>
+      <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table3')"></div>
+      <div class="table-wrapper"><table id="table3">
+        <thead><tr><th>日時</th><th class="td-num">給水前(g)</th><th class="td-num">給水後(g)</th><th class="td-num">給水量(g)</th><th>方法</th><th class="td-long">補足</th></tr></thead>
+        <tbody>
+          <tr><td class="td-date">2026-05-27 22:00</td><td class="td-num">328.6</td><td class="td-num">375.3</td><td class="td-num">約47</td><td>アイロン用先細給水カップ</td><td>初回給水、満水重量を確定</td></tr>
+          <tr><td class="td-date">2026-05-30 22:00</td><td class="td-num">328.6</td><td class="td-num">374.0</td><td class="td-num">約45</td><td>アイロン用先細給水カップ</td><td>2回目給水、LED消灯後21:30〜22:00に実施</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ===== Tab 4: Observation ===== -->
+  <section class="tab-content" id="tab4">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— LOG IV —</span>
+        <h2>観察ログ<span class="count">4 entries</span></h2>
+      </div>
+      <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table4')"></div>
+      <div class="table-wrapper"><table id="table4">
+        <thead><tr><th>日時</th><th>葉状態</th><th>新葉</th><th>変色</th><th>害虫・カビ</th><th>写真</th><th class="td-long">所感</th></tr></thead>
+        <tbody>
+          <tr>
+  <td class="td-date">2026-05-31 16:00</td>
+  <td><span class="badge badge-good">張り良好</span></td>
+  <td>4-5枚展開</td>
+  <td>外葉枯れ込み継続(自然調整)</td>
+  <td><span class="badge badge-good">なし</span></td>
+  <td>
+    <a href="https://www.genspark.ai/api/files/s/D9hPFPvs" target="_blank"><img src="https://www.genspark.ai/api/files/s/D9hPFPvs" style="width:64px;height:64px;object-fit:cover;border-radius:6px;display:inline-block;margin-right:4px;" alt="真上アングル"></a>
+    <a href="https://www.genspark.ai/api/files/s/bAXsIngh" target="_blank"><img src="https://www.genspark.ai/api/files/s/bAXsIngh" style="width:64px;height:64px;object-fit:cover;border-radius:6px;display:inline-block;" alt="横アングル"></a>
+  </td>
+  <td>中央新葉4-5枚充実、覆輪斑明瞭、葉先赤褐色発色良好。鋸歯しっかり育成。外葉枯れ込みは輸送ダメージの延長で自然な調整中</td>
+</tr>
+          <tr><td class="td-date">2026-05-28</td><td><span class="badge badge-warn">外葉黄変</span></td><td>あり</td><td>黄変あり</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>中央新葉健全、右上葉大黄変・葉先枯死。輸送ダメージ</td></tr>
+          <tr><td class="td-date">2026-05-29</td><td><span class="badge badge-good">張り改善</span></td><td>あり</td><td>薄茶斑・覆輪斑茶線</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>外側黄変停止。写真4枚撮影</td></tr>
+          <tr><td class="td-date">2026-05-29 11:53</td><td><span class="badge badge-good">張り良好</span></td><td>あり</td><td>良好</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>赤褐色発色鮮やか、優良株として再評価</td></tr>
+          <tr><td class="td-date">2026-05-30 12:27</td><td><span class="badge badge-good">変化なし</span></td><td>安定</td><td>なし</td><td><span class="badge badge-good">なし</span></td><td><div class="photo-placeholder">📷</div></td><td>湿度低下が懸念点だが株状態は良好</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ===== Tab 5: Event ===== -->
+  <section class="tab-content" id="tab5">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— LOG V —</span>
+        <h2>イベントログ<span class="count">7 entries</span></h2>
+      </div>
+      <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table5')"></div>
+      <div class="table-wrapper"><table id="table5">
+        <thead><tr><th>日時</th><th>種別</th><th class="td-long">詳細</th></tr></thead>
+        <tbody>
+          <tr><td class="td-date">2026-05-23</td><td><span class="badge badge-info">株購入</span></td><td>ロイヤル長久手にてキュービック錦購入、プレステラ深型90鉢植え済み</td></tr>
+          <tr><td class="td-date">2026-05-25 09:00</td><td><span class="badge badge-info">LED初期照射</span></td><td>BRIM SOL 24W、9:00-18:00（9h）運用開始</td></tr>
+          <tr><td class="td-date">2026-05-27 09:00</td><td><span class="badge badge-info">LED切替</span></td><td>NEO TSUKUYOMI 20Wへ変更、距離45cm、9:00-19:00（10h）</td></tr>
+          <tr><td class="td-date">2026-05-27 22:00</td><td><span class="badge badge-info">初回給水</span></td><td>給水前328.6g→給水後375.3g、アイロン用先細給水カップで土に直接</td></tr>
+          <tr><td class="td-date">2026-05-28</td><td><span class="badge badge-info">設備到着</span></td><td>KN-618サーキュレーター、SwitchBot機器、Akondスタンド設置完了</td></tr>
+          <tr><td class="td-date">2026-05-30 09:00</td><td><span class="badge badge-info">LED運用拡張</span></td><td>距離45cm→40cm、照射時間10h→12h（9:00-21:00）に延長</td></tr>
+          <tr><td class="td-date">2026-05-30 22:00</td><td><span class="badge badge-info">2回目給水</span></td><td>給水前328.6g→給水後374.0g、給水量約45g</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ===== Tab 6: Decision ===== -->
+  <section class="tab-content" id="tab6">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-eyebrow">— LOG VI —</span>
+        <h2>判断ログ<span class="count">6 entries</span></h2>
+      </div>
+      <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table6')"></div>
+      <div class="table-wrapper"><table id="table6">
+        <thead><tr><th>日時</th><th class="td-long">内容</th><th class="td-long">根拠</th><th>次回確認日</th></tr></thead>
+        <tbody>
+          <tr><td class="td-date">2026-05-28</td><td>「輸送ダメージを抱えた優良株候補」と評価</td><td>中央新葉健全、外葉のみ黄変</td><td class="td-date">—</td></tr>
+          <tr><td class="td-date">2026-05-30</td><td>LED運用 10h→12hへ延長、距離も45→40cmに短縮</td><td>24hで-14.7gの蒸散、葉の張り・色・新葉動きが良好</td><td class="td-date">2026-06-06</td></tr>
+          <tr><td class="td-date">2026-05-30</td><td>土交換は来春まで見送り</td><td>7日目で植え替えはリスク大、根の張りを優先</td><td class="td-date">2027 Spring</td></tr>
+          <tr><td class="td-date">2026-05-30</td><td>来春の植え替えは「根っこつよし3号」採用</td><td>現株サイズに対し1.2-1.5倍ルール適合</td><td class="td-date">2027 Spring</td></tr>
+          <tr><td class="td-date">2026-05-30</td><td>台湾製八角鉢は2028春以降に保留</td><td>現状は過大、株径13cm頃に再検討</td><td class="td-date">2028 Spring</td></tr>
+          <tr><td class="td-date">2026-05-30</td><td>5年育成ロードマップ策定</td><td>養生→2027春鉢増し→2028→2029→2030大株化</td><td class="td-date">2027-01-01</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div>Last updated: 2026-05-31 16:00 ｜ Total Records: 34</div>
+    <div class="footer-divider"></div>
+    <div>Botanical Journal v3.0 ・ Curated by Marguerite</div>
+  </footer>
+</div>
+
+<script>
+  // === Tab switching ===
+  function switchTab(i) {
+    document.querySelectorAll('.tab-button').forEach((b,idx)=>b.classList.toggle('active', idx===i));
+    document.querySelectorAll('.tab-content').forEach((c,idx)=>c.classList.toggle('active', idx===i));
+  }
+
+  // === Filter ===
+  function filterTable(input, id) {
+    const q = input.value.toLowerCase();
+    const rows = document.getElementById(id).getElementsByTagName('tr');
+    for (let i=1; i<rows.length; i++) {
+      rows[i].style.display = rows[i].textContent.toLowerCase().includes(q) ? '' : 'none';
+    }
+  }
+
+  // === CSV export ===
+  function exportCSV() {
+    const tab = document.querySelector('.tab-content.active');
+    const table = tab.querySelector('table');
+    if (!table) { alert('CSV出力可能なテーブルがありません'); return; }
+    const rows = [...table.querySelectorAll('tr')].map(r =>
+      [...r.querySelectorAll('th,td')].map(c => '"'+c.textContent.trim().replace(/"/g,'""')+'"').join(',')
+    ).join('\n');
+    const blob = new Blob(['\ufeff'+rows], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cubic_'+new Date().toISOString().slice(0,10)+'.csv';
+    a.click();
+  }
+
+  // === Weight chart ===
+  new Chart(document.getElementById('weightChart'), {
+    type: 'line',
+    data: {
+      labels: ['5/27 10:26','5/27 給水前','5/27 給水後','5/28 11:20','5/29 11:53','5/30 12:27','5/30 給水前','5/30 給水後'],
+      datasets: [{
+        label: '鉢込み重量 (g)',
+        data: [333.7, 328.6, 375.3, 355.4, 340.7, 328.7, 328.6, 374.0],
+        borderColor: '#5C7148',
+        backgroundColor: 'rgba(143,164,122,0.15)',
+        borderWidth: 2.5,
+        pointRadius: 5,
+        pointBackgroundColor: '#5C7148',
+        pointBorderColor: '#FDFBF5',
+        pointBorderWidth: 2,
+        tension: 0.35,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { font: { family: 'Noto Serif JP', size: 12 }, color: '#5C5851' } },
+        annotation: {
+          annotations: {
+            idealZone: {
+              type: 'box', yMin: 335, yMax: 375,
+              backgroundColor: 'rgba(143,164,122,0.08)',
+              borderColor: 'rgba(143,164,122,0.25)', borderWidth: 1,
+              label: { display: true, content: '理想帯 335-375g', position: 'start', font:{size:10}, color:'#5C7148' }
+            },
+            watering1: {
+              type: 'line', xMin: 2, xMax: 2,
+              borderColor: '#A05A3F', borderWidth: 1.5, borderDash:[6,4],
+              label: { display: true, content: '初回給水', position: 'start', font:{size:10}, color:'#A05A3F' }
+            },
+            watering2: {
+              type: 'line', xMin: 7, xMax: 7,
+              borderColor: '#A05A3F', borderWidth: 1.5, borderDash:[6,4],
+              label: { display: true, content: '2回目給水', position: 'start', font:{size:10}, color:'#A05A3F' }
+            },
+            target: {
+              type: 'line', yMin: 335, yMax: 335,
+              borderColor: '#C97B5A', borderWidth: 1.5, borderDash:[4,4],
+              label: { display: true, content: '給水適期ライン 335g', position: 'end', font:{size:10}, color:'#A05A3F' }
+            }
+          }
+        }
+      },
+      scales: {
+        y: { min: 320, max: 380, grid: { color: '#EDE3C8' }, ticks: { color:'#5C5851', font:{size:11} } },
+        x: { grid: { display: false }, ticks: { color:'#5C5851', font:{size:10} } }
+      }
+    }
+  });
+
+  // === Env chart ===
+  new Chart(document.getElementById('envChart'), {
+    type: 'line',
+    data: {
+      labels: ['5/27 10:26','5/29 11:53','5/30 12:27','5/30 23:00'],
+      datasets: [
+        {
+          label: '室温 (℃)',
+          data: [28.1, 26.2, 26.8, 25.6],
+          borderColor: '#C97B5A', backgroundColor: 'rgba(201,123,90,0.12)',
+          borderWidth: 2.5, pointRadius: 5,
+          pointBackgroundColor: '#C97B5A', pointBorderColor:'#FDFBF5', pointBorderWidth:2,
+          tension: 0.3, yAxisID: 'y', fill: true
+        },
+        {
+          label: '湿度 (%)',
+          data: [44, 49, 24, 45],
+          borderColor: '#5C7148', backgroundColor: 'rgba(143,164,122,0.12)',
+          borderWidth: 2.5, pointRadius: 5,
+          pointBackgroundColor: '#5C7148', pointBorderColor:'#FDFBF5', pointBorderWidth:2,
+          tension: 0.3, yAxisID: 'y1', fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { font: { family: 'Noto Serif JP', size: 12 }, color: '#5C5851' } },
+        annotation: {
+          annotations: {
+            tempIdeal: {
+              type: 'box', yScaleID: 'y', yMin: 20, yMax: 30,
+              backgroundColor: 'rgba(201,123,90,0.05)',
+              borderColor: 'rgba(201,123,90,0.2)', borderWidth: 1
+            },
+            humidIdeal: {
+              type: 'box', yScaleID: 'y1', yMin: 40, yMax: 60,
+              backgroundColor: 'rgba(143,164,122,0.05)',
+              borderColor: 'rgba(143,164,122,0.2)', borderWidth: 1
+            }
+          }
+        }
+      },
+      scales: {
+        y: { type:'linear', position:'left', min:15, max:35,
+             title:{display:true, text:'温度 (℃)', color:'#A05A3F', font:{size:11}},
+             grid: { color: '#EDE3C8' }, ticks: { color:'#5C5851', font:{size:11} } },
+        y1: { type:'linear', position:'right', min:0, max:100,
+              title:{display:true, text:'湿度 (%)', color:'#5C7148', font:{size:11}},
+              grid: { display: false }, ticks: { color:'#5C5851', font:{size:11} } },
+        x: { grid:{display:false}, ticks:{color:'#5C5851', font:{size:10}} }
+      }
+    }
+  });
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>

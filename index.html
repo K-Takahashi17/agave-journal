@@ -664,7 +664,7 @@
       <span class="meta-chip">迎え入れ <strong>2026-05-23</strong></span>
       <span class="meta-chip">本日 <strong>2026-06-01</strong></span>
       <span class="meta-chip">育成 <strong>9日目</strong></span>
-      <span class="meta-chip">記録 <strong>35件</strong></span>
+      <span class="meta-chip">記録 <strong>38件</strong></span>
       <span class="meta-chip">フェーズ <strong>養生期 / 順応完了直後</strong></span>
     </div>
   </header>
@@ -705,26 +705,26 @@
       <div class="kpi-card temp">
         <div class="kpi-eyebrow">TEMPERATURE</div>
         <div class="kpi-label">🌡️ 室温</div>
-        <div class="kpi-value">25.6<span class="unit">℃</span></div>
+        <div class="kpi-value">25.3<span class="unit">℃</span></div>
         <span class="kpi-status status-ok">✓ 適温レンジ内</span>
       </div>
       <div class="kpi-card humid">
         <div class="kpi-eyebrow">HUMIDITY</div>
         <div class="kpi-label">💧 湿度</div>
-        <div class="kpi-value">45<span class="unit">%</span></div>
+        <div class="kpi-value">43<span class="unit">%</span></div>
         <span class="kpi-status status-ok">✓ 理想レンジ内</span>
       </div>
       <div class="kpi-card weight">
         <div class="kpi-eyebrow">WEIGHT</div>
         <div class="kpi-label">⚖️ 鉢込み重量</div>
-        <div class="kpi-value">341.1<span class="unit">g</span></div>
-        <span class="kpi-status status-info">💧 給水適期接近中</span>
+        <div class="kpi-value">332.9<span class="unit">g</span></div>
+        <span class="kpi-status status-warn">⚠️ 給水適期到達</span>
       </div>
       <div class="kpi-card next">
         <div class="kpi-eyebrow">NEXT WATERING</div>
         <div class="kpi-label">📅 次回給水予想</div>
-        <div class="kpi-value">3<span class="unit">日後</span></div>
-        <span class="kpi-status status-warn">2026-06-03 頃</span>
+        <div class="kpi-value">本日</div>
+        <span class="kpi-status status-warn">2026-06-01 夜 予定</span>
       </div>
     </div>
 
@@ -753,7 +753,7 @@
         <h2>現在の所見</h2>
       </div>
       <div class="alert-box">
-        次回給水は<strong>約3〜4日後（2026-06-03〜04頃）</strong>を予定。2026-05-30 12:27時点で湿度が<strong>24%</strong>まで急降下しましたが、エアコン停止と窓開け、外気の低湿度が原因。給水および夜間気温低下により23:00には<strong>45%</strong>まで回復し、現在は理想レンジ内です。LED12時間運用は順調、2026-06-06以降に13時間延長を検討します。
+        本日2026-06-01 12:38時点で<strong>332.9g</strong>に到達し、給水適期335gを下回りました。前回給水（5/30 22:00）から約38.5時間で-41.1g、平均1.07g/h の蒸散ペース。本日<strong>21:00頃のLED消灯後</strong>に3回目給水を予定します。温度25.3℃・湿度43%は理想レンジ内で安定。鉢底トレーに枯葉落下を確認、衛生面のため除去推奨。LED12時間運用は順調、2026-06-06以降に13時間延長を検討します。
       </div>
     </div>
 
@@ -821,12 +821,18 @@
     <div class="section">
       <div class="section-header">
         <span class="section-eyebrow">— LOG I —</span>
-        <h2>計測ログ<span class="count">10 entries</span></h2>
+        <h2>計測ログ<span class="count">11 entries</span></h2>
       </div>
       <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table1')"></div>
       <div class="table-wrapper"><table id="table1">
         <thead><tr><th>日時</th><th class="td-num">鉢込み重量(g)</th><th class="td-num">前回比(g)</th><th>所感</th></tr></thead>
         <tbody>
+          <tr>
+  <td class="td-date">2026-06-01 12:38</td>
+  <td class="td-num">332.9</td>
+  <td class="td-num">-8.2</td>
+  <td>21:00から15h38mで-8.2g（約0.52g/h）。LED消灯時間帯を挟むため夜間ペース。給水適期335gを下回り、本日夜給水判断</td>
+</tr>
           <tr>
   <td class="td-date">2026-05-31 21:00</td>
   <td class="td-num">341.1</td>
@@ -852,12 +858,13 @@
     <div class="section">
       <div class="section-header">
         <span class="section-eyebrow">— LOG II —</span>
-        <h2>環境ログ<span class="count">5 entries</span></h2>
+        <h2>環境ログ<span class="count">6 entries</span></h2>
       </div>
       <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table2')"></div>
       <div class="table-wrapper"><table id="table2">
         <thead><tr><th>日時</th><th class="td-num">室温(℃)</th><th class="td-num">湿度(%)</th><th class="td-num">照度(lux)</th><th class="td-num">CO₂(ppm)</th><th class="td-long">所感</th></tr></thead>
         <tbody>
+          <tr><td class="td-date">2026-06-01 12:38</td><td class="td-num">25.3</td><td class="td-num">43</td><td class="td-num">—</td><td class="td-num">—</td><td>適温・理想湿度レンジ内、安定</td></tr>
           <tr><td class="td-date">2026-05-31 16:00</td><td class="td-num">27.9</td><td class="td-num">39 ⚠️</td><td class="td-num">—</td><td class="td-num">—</td><td>LED40cm接近の影響か、湿度が理想下限を下回る</td></tr>
           <tr><td class="td-date">2026-05-30 23:00</td><td class="td-num">25.6</td><td class="td-num">45</td><td class="td-num">—</td><td class="td-num">—</td><td>給水と夜間気温低下で湿度回復</td></tr>
           <tr><td class="td-date">2026-05-30 12:27</td><td class="td-num">26.8</td><td class="td-num">24 ⚠️</td><td class="td-num">—</td><td class="td-num">—</td><td>エアコン停止＋窓開け、外気湿度低下が要因</td></tr>
@@ -891,7 +898,7 @@
     <div class="section">
       <div class="section-header">
         <span class="section-eyebrow">— LOG IV —</span>
-        <h2>観察ログ<span class="count">5 entries</span></h2>
+        <h2>観察ログ<span class="count">6 entries</span></h2>
       </div>
       <div class="search-box"><input type="text" class="search-input" placeholder="🔍 キーワードで絞り込み..." onkeyup="filterTable(this,'table4')"></div>
       <div class="table-wrapper"><table id="table4">
@@ -905,6 +912,18 @@
   <th class="td-long">所感</th>
 </tr></thead>
         <tbody>
+          <tr>
+  <td class="td-date">2026-06-01 12:38</td>
+  <td><span class="badge badge-good">張り良好</span></td>
+  <td>4-5枚展開</td>
+  <td>外葉枯れ込み継続(自然調整)</td>
+  <td><span class="badge badge-good">なし</span></td>
+  <td>
+    <img src="photos/cubic_2026-06-01_1238_01_top.png" onclick="openLightbox('photos/cubic_2026-06-01_1238_01_top.png', '2026-06-01 12:38 真上アングル')" style="width:64px;height:64px;object-fit:cover;border-radius:6px;display:inline-block;margin-right:4px;cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="真上アングル" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex';"><div class="photo-placeholder" style="display:none;margin-right:4px;">📷</div>
+    <img src="photos/cubic_2026-06-01_1238_02_side.png" onclick="openLightbox('photos/cubic_2026-06-01_1238_02_side.png', '2026-06-01 12:38 横アングル')" style="width:64px;height:64px;object-fit:cover;border-radius:6px;display:inline-block;cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="横アングル" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex';"><div class="photo-placeholder" style="display:none;">📷</div>
+  </td>
+  <td>中央新葉立ち上がり良好、覆輪斑明瞭、葉先赤褐色継続。鉢底トレーに枯葉落下確認(除去推奨)。ロゼット形整い順調</td>
+</tr>
           <tr>
   <td class="td-date">2026-05-31 16:00</td>
   <td><span class="badge badge-good">張り良好</span></td>
@@ -987,7 +1006,7 @@
 
   <!-- ===== Footer ===== -->
   <footer class="footer">
-    <div>Last updated: 2026-05-31 21:00 ｜ Total Records: 35</div>
+    <div>Last updated: 2026-06-01 12:38 ｜ Total Records: 38</div>
     <div class="footer-divider"></div>
     <div>Botanical Journal v3.0 ・ Curated by Marguerite</div>
   </footer>
@@ -1078,10 +1097,10 @@
   new Chart(document.getElementById('weightChart'), {
     type: 'line',
     data: {
-      labels: ['5/27 10:26','5/27 給水前','5/27 給水後','5/28 11:20','5/29 11:53','5/30 12:27','5/30 給水前','5/30 給水後'],
+      labels: ['5/27 10:26','5/27 給水前','5/27 給水後','5/28 11:20','5/29 11:53','5/30 12:27','5/30 給水前','5/30 給水後','5/31 16:00','5/31 21:00','6/1 12:38'],
       datasets: [{
         label: '鉢込み重量 (g)',
-        data: [333.7, 328.6, 375.3, 355.4, 340.7, 328.7, 328.6, 374.0],
+        data: [333.7, 328.6, 375.3, 355.4, 340.7, 328.7, 328.6, 374.0, 344.6, 341.1, 332.9],
         borderColor: '#5C7148',
         backgroundColor: 'rgba(143,164,122,0.15)',
         borderWidth: 2.5,
@@ -1134,11 +1153,11 @@
   new Chart(document.getElementById('envChart'), {
     type: 'line',
     data: {
-      labels: ['5/27 10:26','5/29 11:53','5/30 12:27','5/30 23:00'],
+      labels: ['5/27 10:26','5/29 11:53','5/30 12:27','5/30 23:00','5/31 16:00','6/1 12:38'],
       datasets: [
         {
           label: '室温 (℃)',
-          data: [28.1, 26.2, 26.8, 25.6],
+          data: [28.1, 26.2, 26.8, 25.6, 27.9, 25.3],
           borderColor: '#C97B5A', backgroundColor: 'rgba(201,123,90,0.12)',
           borderWidth: 2.5, pointRadius: 5,
           pointBackgroundColor: '#C97B5A', pointBorderColor:'#FDFBF5', pointBorderWidth:2,
@@ -1146,7 +1165,7 @@
         },
         {
           label: '湿度 (%)',
-          data: [44, 49, 24, 45],
+          data: [44, 49, 24, 45, 39, 43],
           borderColor: '#5C7148', backgroundColor: 'rgba(143,164,122,0.12)',
           borderWidth: 2.5, pointRadius: 5,
           pointBackgroundColor: '#5C7148', pointBorderColor:'#FDFBF5', pointBorderWidth:2,
